@@ -19,6 +19,8 @@ import numpy as np
 import streamlit as st
 import torch
 import yaml
+
+from huggingface_hub import hf_hub_download
  
 from src.dataset import CLASS_FULL_NAMES, CLASS_NAMES
 from src.explainability.attention_visualization import get_cls_attention_map, overlay_attention
@@ -100,28 +102,50 @@ def show_precautions(pred_class: str):
  
 @st.cache_resource
 def load_everything():
-    """Unchanged from the original app — same config, same architecture,
-    same checkpoint loading. Cached so switching input methods doesn't
-    reload the model."""
+    """Load configuration, trained model, preprocessing pipeline and device."""
+
     with open("configs/config.yaml") as f:
         cfg = yaml.safe_load(f)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    ckpt_path = os.path.join(cfg["project"]["checkpoint_dir"], "best_model.pth")
- 
+
+    device = torch.device(
+        "cuda" if torch.cuda.is_available() else "cpu"
+    )
+
+    # Download trained checkpoint from Hugging Face
+    ckpt_path = hf_hub_download(
+        repo_id="sai2318/best",
+        filename="best_model.pth"
+    )
+
     m_cfg = cfg["model"]
+
+    # Create the same architecture used during training
     model = HybridResNetViT(
-        num_classes=m_cfg["num_classes"], resnet_backbone=m_cfg["resnet_backbone"],
-        vit_backbone=m_cfg["vit_backbone"], fusion_dim=m_cfg["fusion_dimension"],
-        fusion_type="attention", dropout=m_cfg["dropout"], pretrained=False,
+        num_classes=m_cfg["num_classes"],
+        resnet_backbone=m_cfg["resnet_backbone"],
+        vit_backbone=m_cfg["vit_backbone"],
+        fusion_dim=m_cfg["fusion_dimension"],
+        fusion_type="attention",
+        dropout=m_cfg["dropout"],
+        pretrained=False,
     ).to(device)
- 
-    model_ready = os.path.exists(ckpt_path)
-    if model_ready:
-        model.load_state_dict(torch.load(ckpt_path, map_location=device))
-        model.eval()
- 
+
+    # Load trained weights
+    state_dict = torch.load(
+        ckpt_path,
+        map_location=device
+    )
+
+    model.load_state_dict(state_dict)
+    model.eval()
+
+    # Same preprocessing used during validation/testing
     transform = get_val_test_transform(cfg)
-    return cfg, model, transform, device, model_ready
+
+    # Return everything required by main()
+    return cfg, model, transform, device, True
+ 
+   
  
  
 def get_input_image(source: str):
@@ -229,15 +253,7 @@ def main():
         "for any real skin concern."
     )
  
-    cfg, model, transform, device, model_ready = load_everything()
- 
-    if not model_ready:
-        st.error(
-            "No trained model checkpoint found at "
-            f"`{cfg['project']['checkpoint_dir']}/best_model.pth`. "
-            "Train the model first: `python scripts/train_hybrid.py`."
-        )
-        return
+    cfg, model, transform, device, _ = load_everything()
  
     st.subheader("Choose Image Source")
     source = st.radio(
