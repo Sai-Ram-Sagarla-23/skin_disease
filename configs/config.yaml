@@ -1,0 +1,119 @@
+# =============================================================================
+# Configuration for: Hybrid ResNet50 + ViT Skin Disease Classification
+# Every tunable parameter lives here. No source code edits should be needed
+# for a normal run — only this file (and, optionally, dataset paths).
+# =============================================================================
+
+project:
+  name: "skin_disease_hybrid"
+  seed: 42
+  output_dir: "outputs"
+  checkpoint_dir: "models/checkpoints"
+
+# -----------------------------------------------------------------------------
+# Dataset
+# -----------------------------------------------------------------------------
+dataset:
+  name: "HAM10000"
+  # Where raw images + metadata CSV are expected/placed.
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  splits_dir: "data/splits"
+  metadata_csv: "data/raw/HAM10000_metadata.csv"
+  image_dirs:
+    - "data/raw/HAM10000_images_part_1"
+    - "data/raw/HAM10000_images_part_2"
+  # Column names in HAM10000_metadata.csv
+  columns:
+    image_id: "image_id"
+    label: "dx"
+    patient_id: "lesion_id"      # HAM10000 does not ship a direct patient_id;
+                                  # lesion_id groups images of the same lesion
+                                  # and is used as the leakage-prevention key.
+                                  # See docs/limitations.md.
+  # Split ratios (patient/lesion-wise, not simple random image split)
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+
+# -----------------------------------------------------------------------------
+# Preprocessing / Augmentation
+# -----------------------------------------------------------------------------
+data:
+  image_size: 224
+  num_workers: 2
+  pin_memory: true
+  mean: [0.485, 0.456, 0.406]   # ImageNet stats (pretrained backbones)
+  std: [0.229, 0.224, 0.225]
+  augmentation:
+    horizontal_flip_p: 0.5
+    vertical_flip_p: 0.3
+    rotation_degrees: 15
+    random_resized_crop_scale: [0.85, 1.0]
+    brightness: 0.15
+    contrast: 0.15
+
+# -----------------------------------------------------------------------------
+# Model
+# -----------------------------------------------------------------------------
+model:
+  resnet_backbone: "resnet50"          # torchvision, ImageNet pretrained
+  vit_backbone: "vit_base_patch16_224" # timm, ImageNet pretrained
+  fusion_dimension: 512
+  dropout: 0.3
+  num_classes: 7                        # HAM10000: akiec, bcc, bkl, df, mel, nv, vasc
+  pretrained: true
+
+# -----------------------------------------------------------------------------
+# Training
+# -----------------------------------------------------------------------------
+training:
+  batch_size: 32          # reduce to 8-16 on CPU / low-memory GPU
+  epochs_stage1: 8        # frozen backbone, train fusion + classifier
+  epochs_stage2: 12       # partial unfreeze, fine-tune
+  learning_rate_stage1: 0.001
+  learning_rate_stage2: 0.00005
+  weight_decay: 0.0001
+  optimizer: "adamw"
+  scheduler: "cosine"
+  early_stopping_patience: 5
+  gradient_clip_norm: 1.0
+  mixed_precision: true      # only engages automatically if CUDA available
+  loss_function: "focal"     # options: "ce", "weighted_ce", "focal"
+  focal_gamma: 2.0
+  checkpoint_metric: "macro_f1"
+
+# -----------------------------------------------------------------------------
+# Baselines to train for comparison
+# -----------------------------------------------------------------------------
+baselines:
+  - resnet18
+  - resnet50
+  - vit
+  - resnet50_vit_concat
+
+# -----------------------------------------------------------------------------
+# Ablation study
+# -----------------------------------------------------------------------------
+ablation:
+  experiments:
+    - resnet50_only
+    - vit_only
+    - concat_fusion
+    - attention_fusion
+    - attention_fusion_weighted_ce
+    - attention_fusion_focal
+
+# -----------------------------------------------------------------------------
+# Explainability
+# -----------------------------------------------------------------------------
+explainability:
+  gradcam_target_layer: "layer4"   # last conv block of ResNet50
+  num_demo_images: 5
+
+# -----------------------------------------------------------------------------
+# Statistical validation
+# -----------------------------------------------------------------------------
+statistical_validation:
+  enabled: false          # set true + list seeds to run multi-seed validation
+  seeds: [42, 123, 2024]
