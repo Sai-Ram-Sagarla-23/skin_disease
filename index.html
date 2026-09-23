@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Skin Lesion Classifier — Research Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bone:#F1F3F2;
+  --bone-2:#E6EAE9;
+  --card:#FBFCFC;
+  --ink:#131E26;
+  --ink-soft:#31424E;
+  --slate:#5C6C77;
+  --line:#D3DAD9;
+  --teal:#0E6B74;
+  --teal-deep:#0A4F56;
+  --crimson:#AE2430;
+  --ochre:#A9702A;
+  --green:#2C7A58;
+  --radius:10px;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --serif:'Spectral',Georgia,'Times New Roman',serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bone);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font:inherit;color:inherit}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-0.01em}
+ 
+/* ---------- safety ribbon ---------- */
+.ribbon{
+  background:var(--ink);
+  color:#E8EDEC;
+  font-size:13px;
+  padding:9px 24px;
+  display:flex;
+  gap:10px;
+  align-items:baseline;
+  justify-content:center;
+  text-align:center;
+  flex-wrap:wrap;
+}
+.ribbon strong{color:#fff;font-weight:600}
+ 
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:1px solid var(--line);
+  background:var(--card);
+}
+.masthead-inner{
+  max-width:1180px;margin:0 auto;padding:22px 24px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;
+}
+.wordmark{font-family:var(--serif);font-size:27px;font-weight:600;letter-spacing:-0.015em;line-height:1.1}
+.wordmark em{font-style:italic;font-weight:400;color:var(--teal)}
+.subtitle{color:var(--slate);font-size:13.5px;margin-top:4px;max-width:52ch}
+ 
+.engine{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--slate)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--slate);flex:none}
+.dot.live{background:var(--green)}
+.dot.sim{background:var(--ochre)}
+.linkish{
+  background:none;border:none;padding:0;cursor:pointer;
+  color:var(--teal);text-decoration:underline;text-underline-offset:3px;
+}
+.linkish:hover{color:var(--teal-deep)}
+ 
+/* ---------- layout ---------- */
+main{max-width:1180px;margin:0 auto;padding:26px 24px 80px}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
+@media(max-width:900px){.workspace{grid-template-columns:1fr}}
+ 
+.panel{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+}
+.panel-head{
+  padding:16px 20px 14px;
+  border-bottom:1px solid var(--line);
+}
+.panel-head h2{font-size:15.5px}
+.panel-head p{margin:3px 0 0;color:var(--slate);font-size:13px}
+.panel-body{padding:20px}
+ 
+/* ---------- source switch ---------- */
+.switch{
+  display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bone-2);
+}
+.switch button{
+  border:none;background:transparent;padding:8px 16px;cursor:pointer;
+  font-size:13.5px;font-weight:500;color:var(--slate);
+}
+.switch button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:inset 0 -2px 0 var(--teal)}
+.switch button:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+ 
+/* ---------- dropzone ---------- */
+.dropzone{
+  margin-top:18px;
+  border:1.5px dashed var(--line);
+  border-radius:var(--radius);
+  background:var(--bone);
+  padding:38px 22px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+.dropzone:hover,.dropzone.hot{border-color:var(--teal);background:#EAF1F1}
+.dropzone:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.dropzone .big{font-size:15px;font-weight:500}
+.dropzone .small{color:var(--slate);font-size:13px;margin-top:5px}
+.icon{width:26px;height:26px;stroke:var(--teal);fill:none;stroke-width:1.6;margin-bottom:8px}
+ 
+/* ---------- camera ---------- */
+.camstage{margin-top:18px;border-radius:var(--radius);overflow:hidden;background:#0E1418;position:relative;aspect-ratio:4/3}
+.camstage video{width:100%;height:100%;object-fit:cover;display:block}
+.camstage .reticle{
+  position:absolute;inset:14% 22%;border:1.5px solid rgba(255,255,255,.55);border-radius:50%;
+  box-shadow:0 0 0 9999px rgba(10,16,20,.28);pointer-events:none;
+}
+.camstage .hint{
+  position:absolute;left:0;right:0;bottom:10px;text-align:center;color:#D7E0DF;font-size:12.5px;
+  text-shadow:0 1px 3px rgba(0,0,0,.6);
+}
+.camstage.empty{display:flex;align-items:center;justify-content:center;color:#8A9AA3;font-size:13.5px;padding:20px;text-align:center}
+ 
+/* ---------- preview ---------- */
+.preview{margin-top:18px;display:none}
+.preview.on{display:block}
+.preview-frame{
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--bone-2);
+  display:flex;align-items:center;justify-content:center;max-height:340px;
+}
+.preview-frame img{max-width:100%;max-height:340px;display:block}
+.filemeta{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:12.5px;color:var(--slate);flex-wrap:wrap}
+ 
+/* ---------- buttons ---------- */
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{
+  border:1px solid var(--teal);background:var(--teal);color:#fff;
+  padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;
+  transition:background .15s;
+}
+.btn:hover{background:var(--teal-deep);border-color:var(--teal-deep)}
+.btn:disabled{background:#9FB0B2;border-color:#9FB0B2;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.btn.ghost:hover{background:var(--bone-2);border-color:var(--slate)}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+ 
+/* ---------- empty / error states ---------- */
+.state{padding:40px 22px;text-align:center;color:var(--slate);font-size:13.5px}
+.state .lead{color:var(--ink-soft);font-size:14.5px;margin-bottom:5px}
+.alert{
+  border-left:3px solid var(--crimson);background:#FBF0F0;color:#71181F;
+  padding:11px 14px;border-radius:0 6px 6px 0;font-size:13.5px;margin-top:16px;
+}
+.notice{
+  border-left:3px solid var(--ochre);background:#FBF5EC;color:#6E4917;
+  padding:11px 14px;border-radius:0 6px 6px 0;font-size:13px;
+}
+ 
+/* ---------- results ---------- */
+#results{display:none}
+#results.on{display:block;animation:rise .35s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#results.on{animation:none}}
+ 
+.verdict{display:flex;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.rail{width:6px;flex:none;background:var(--slate)}
+.rail.high{background:var(--crimson)}
+.rail.mid{background:var(--ochre)}
+.rail.low{background:var(--green)}
+.verdict-body{padding:18px 20px;flex:1;min-width:0}
+.triage{font-size:12.5px;font-weight:600;color:var(--slate);letter-spacing:.01em}
+.triage.high{color:var(--crimson)}
+.triage.mid{color:var(--ochre)}
+.triage.low{color:var(--green)}
+.dx{font-family:var(--serif);font-size:27px;line-height:1.2;margin:4px 0 2px;font-weight:600}
+.dxcode{color:var(--slate);font-size:13px;font-family:var(--serif);font-style:italic}
+ 
+.confwrap{margin-top:16px}
+.conflabel{display:flex;justify-content:space-between;font-size:13px;color:var(--slate);margin-bottom:6px}
+.conflabel b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.confbar{height:7px;background:var(--bone-2);border-radius:99px;overflow:hidden}
+.conffill{height:100%;width:0;background:var(--teal);border-radius:99px;transition:width .6s cubic-bezier(.2,.7,.3,1)}
+@media(prefers-reduced-motion:reduce){.conffill{transition:none}}
+ 
+.section{margin-top:22px}
+.section h3{font-size:14px;margin-bottom:12px}
+.section h3 span{color:var(--slate);font-weight:400;font-size:13px}
+ 
+/* probabilities */
+.prob{margin-bottom:11px}
+.prob-top{display:flex;justify-content:space-between;gap:12px;font-size:13px;margin-bottom:4px}
+.prob-top .nm{color:var(--ink-soft);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prob-top .vl{color:var(--slate);font-variant-numeric:tabular-nums;flex:none}
+.prob-track{height:5px;background:var(--bone-2);border-radius:99px;overflow:hidden}
+.prob-fill{height:100%;background:#A9B6BB;border-radius:99px;transition:width .5s ease-out}
+.prob.lead .prob-top .nm{color:var(--ink);font-weight:500}
+.prob.lead .prob-top .vl{color:var(--ink)}
+.prob.lead .prob-fill{background:var(--teal)}
+ 
+/* precautions */
+ul.care{margin:0;padding:0;list-style:none}
+ul.care li{
+  padding:9px 0 9px 20px;position:relative;border-top:1px solid var(--line);
+  font-size:13.6px;color:var(--ink-soft);line-height:1.5;
+}
+ul.care li:first-child{border-top:none}
+ul.care li::before{
+  content:"";position:absolute;left:3px;top:17px;width:6px;height:6px;border-radius:50%;background:var(--teal);
+}
+.general{margin-top:14px;font-size:12.8px;color:var(--slate);border-top:1px solid var(--line);padding-top:12px}
+ 
+/* ---------- explainability ---------- */
+.explain{margin-top:22px}
+.triptych{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:760px){.triptych{grid-template-columns:1fr}}
+.plate figure{margin:0}
+.plate .holder{
+  border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bone-2);
+  position:relative;aspect-ratio:1;
+}
+.plate .holder img,.plate .holder canvas{width:100%;height:100%;display:block;object-fit:cover}
+.plate .holder .over{position:absolute;inset:0;width:100%;height:100%}
+.plate figcaption{margin-top:9px}
+.plate .ttl{font-size:13.5px;font-weight:500}
+.plate .desc{font-size:12.5px;color:var(--slate);margin-top:2px;line-height:1.45}
+ 
+.slider{display:flex;align-items:center;gap:12px;margin-top:16px;font-size:13px;color:var(--slate)}
+.slider input{flex:1;max-width:260px;accent-color:var(--teal)}
+.scale{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--slate);margin-top:6px}
+.scale .bar{height:7px;flex:1;max-width:190px;border-radius:99px;
+  background:linear-gradient(90deg,#2C3E8F,#2E9AA8,#63C26B,#E8D44A,#D9432C)}
+ 
+/* ---------- config drawer ---------- */
+dialog{
+  border:1px solid var(--line);border-radius:var(--radius);padding:0;max-width:520px;width:calc(100% - 40px);
+  background:var(--card);color:var(--ink);
+}
+dialog::backdrop{background:rgba(19,30,38,.45)}
+.dlg-body{padding:22px}
+.dlg-body h2{font-family:var(--serif);font-size:20px;margin-bottom:6px}
+.dlg-body p{color:var(--slate);font-size:13.4px;margin:0 0 16px}
+label.fld{display:block;font-size:13px;font-weight:500;margin-bottom:6px}
+input[type=text]{
+  width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:7px;background:var(--bone);
+}
+input[type=text]:focus{outline:2px solid var(--teal);outline-offset:-1px;border-color:var(--teal)}
+.hint{font-size:12.4px;color:var(--slate);margin-top:7px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.4px;background:var(--bone-2);padding:1px 5px;border-radius:4px}
+.dlg-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--line);background:var(--bone)}
+ 
+footer{max-width:1180px;margin:0 auto;padding:0 24px 50px;color:var(--slate);font-size:12.6px}
+footer hr{border:none;border-top:1px solid var(--line);margin:0 0 16px}
+.spinner{
+  width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;
+  display:inline-block;vertical-align:-3px;margin-right:8px;animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+ 
+<div class="ribbon">
+  <span><strong>Research prototype — not a medical device.</strong> Nothing here is a diagnosis. Any real skin concern belongs with a qualified dermatologist.</span>
+</div>
+ 
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <div class="wordmark">Skin Lesion <em>Classifier</em></div>
+      <p class="subtitle">Hybrid ResNet50 + Vision Transformer with attention fusion, Grad-CAM and ViT attention maps.</p>
+    </div>
+    <div class="engine">
+      <span class="dot" id="engineDot"></span>
+      <span id="engineText">Checking model…</span>
+      <button class="linkish" id="openCfg">Change</button>
+    </div>
+  </div>
+</header>
+ 
+<main>
+  <div class="workspace">
+ 
+    <!-- INTAKE -->
+    <section class="panel" aria-labelledby="intakeH">
+      <div class="panel-head">
+        <h2 id="intakeH">Image</h2>
+        <p>Dermoscopic images give the most reliable result.</p>
+      </div>
+      <div class="panel-body">
+        <div class="switch" role="group" aria-label="Image source">
+          <button id="tabUpload" aria-pressed="true">Upload a file</button>
+          <button id="tabCamera" aria-pressed="false">Use the camera</button>
+        </div>
+ 
+        <!-- upload -->
+        <div id="uploadPane">
+          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose an image or drop one here">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M3.5 15v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"/></svg>
+            <div class="big">Drop an image here, or choose a file</div>
+            <div class="small">JPG or PNG, up to 12 MB</div>
+          </div>
+          <input type="file" id="filePicker" accept="image/jpeg,image/png,image/jpg" class="sr">
+        </div>
+ 
+        <!-- camera -->
+        <div id="cameraPane" hidden>
+          <div class="camstage empty" id="camStage">
+            <span id="camPlaceholder">The camera is off. Start it to frame the lesion.</span>
+            <video id="video" playsinline muted hidden></video>
+            <div class="reticle" id="reticle" hidden></div>
+            <div class="hint" id="camHint" hidden>Fill the circle with the lesion, in even light</div>
+          </div>
+          <div class="row">
+            <button class="btn" id="camStart">Start camera</button>
+            <button class="btn" id="camShoot" disabled>Take photo</button>
+            <button class="btn ghost" id="camStop" disabled>Stop camera</button>
+          </div>
+          <input type="file" id="camFallback" accept="image/*" capture="environment" class="sr">
+          <div id="camError"></div>
+        </div>
+ 
+        <!-- preview -->
+        <div class="preview" id="preview">
+          <div class="preview-frame"><img id="previewImg" alt="The image you selected"></div>
+          <div class="filemeta"><span id="metaLeft"></span><span id="metaRight"></span></div>
+          <div class="row">
+            <button class="btn" id="analyze">Analyse image</button>
+            <button class="btn ghost" id="clear">Remove image</button>
+          </div>
+        </div>
+ 
+        <div id="intakeError"></div>
+      </div>
+    </section>
+ 
+    <!-- FINDINGS -->
+    <section class="panel" aria-labelledby="findH" aria-live="polite">
+      <div class="panel-head">
+        <h2 id="findH">Findings</h2>
+        <p>Seven HAM10000 lesion classes, ranked by probability.</p>
+      </div>
+ 
+      <div class="state" id="idleState">
+        <div class="lead">No image analysed yet</div>
+        Pick a file or take a photo, then choose <em>Analyse image</em>.
+      </div>
+ 
+      <div class="panel-body" id="results">
+        <div id="simBanner"></div>
+        <div id="camBanner"></div>
+ 
+        <div class="verdict">
+          <div class="rail" id="rail"></div>
+          <div class="verdict-body">
+            <div class="triage" id="triage"></div>
+            <div class="dx" id="dxName"></div>
+            <div class="dxcode" id="dxCode"></div>
+            <div class="confwrap">
+              <div class="conflabel"><span>Model confidence</span><b id="confVal">—</b></div>
+              <div class="confbar"><div class="conffill" id="confFill"></div></div>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="section">
+          <h3>Precautions <span>· for the predicted class</span></h3>
+          <ul class="care" id="careList"></ul>
+          <p class="general" id="generalNote"></p>
+        </div>
+ 
+        <div class="section">
+          <h3>All class probabilities</h3>
+          <div id="probList"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+ 
+  <!-- EXPLAINABILITY -->
+  <section class="panel explain" id="explainPanel" style="display:none" aria-labelledby="expH">
+    <div class="panel-head">
+      <h2 id="expH">What the model looked at</h2>
+      <p>Grad-CAM traces the ResNet branch; the attention map traces the transformer branch. They often disagree — that disagreement is informative.</p>
+    </div>
+    <div class="panel-body">
+      <div class="triptych">
+        <div class="plate"><figure>
+          <div class="holder"><img id="plateOrig" alt="The image as the model received it"></div>
+          <figcaption><div class="ttl">Model input</div><div class="desc">Resized and normalised exactly as in validation.</div></figcaption>
+        </figure></div>
+        <div class="plate"><figure>
+          <div class="holder"><img id="plateCamBase" alt=""><canvas class="over" id="plateCam" aria-label="Grad-CAM overlay"></canvas></div>
+          <figcaption><div class="ttl">ResNet50 Grad-CAM</div><div class="desc">Gradient-weighted activation from the final convolutional block.</div></figcaption>
+        </figure></div>
+        <div class="plate"><figure>
+          <div class="holder"><img id="plateAttnBase" alt=""><canvas class="over" id="plateAttn" aria-label="Attention overlay"></canvas></div>
+          <figcaption><div class="ttl">Transformer attention</div><div class="desc">Class-token attention over image patches, last layer.</div></figcaption>
+        </figure></div>
+      </div>
+ 
+      <div class="slider">
+        <label for="opacity">Overlay strength</label>
+        <input type="range" id="opacity" min="0" max="100" value="55">
+        <span id="opacityVal">55%</span>
+      </div>
+      <div class="scale"><span>low</span><span class="bar"></span><span>high</span><span>relative attribution</span></div>
+    </div>
+  </section>
+</main>
+ 
+<footer>
+  <hr>
+  <p>Predictions come from a hybrid ResNet50 + ViT model trained on HAM10000 dermoscopic images. Photographs from a phone or webcam differ substantially from that distribution, so camera results are a demonstration of the pipeline rather than a meaningful assessment. Nothing in this interface replaces examination by a clinician.</p>
+</footer>
+ 
+<dialog id="cfg">
+  <div class="dlg-body">
+    <h2>Connect the model</h2>
+    <p>The trained PyTorch model runs in Python, not in the browser. Point this page at your local inference server to get real predictions.</p>
+    <label class="fld" for="cfgUrl">Inference server address</label>
+    <input type="text" id="cfgUrl" placeholder="http://localhost:8000" spellcheck="false">
+    <p class="hint">Leave this empty to explore the interface in simulated mode, where the maps and probabilities are generated in the browser and are <strong>not</strong> model output. Start the server with <code>python server.py</code> from your project root.</p>
+    <div id="cfgStatus"></div>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn ghost" id="cfgCancel">Cancel</button>
+    <button class="btn" id="cfgSave">Save and test</button>
+  </div>
+</dialog>
+ 
+<script>
+"use strict";
+ 
+/* ============================== data ============================== */
+const CLASSES = ["akiec","bcc","bkl","df","mel","nv","vasc"];
+ 
+const FULL = {
+  akiec:"Actinic keratoses and intraepithelial carcinoma",
+  bcc:"Basal cell carcinoma",
+  bkl:"Benign keratosis-like lesions",
+  df:"Dermatofibroma",
+  mel:"Melanoma",
+  nv:"Melanocytic nevi",
+  vasc:"Vascular lesions"
+};
+ 
+const TRIAGE = {
+  akiec:["mid","See a dermatologist promptly"],
+  bcc:  ["mid","See a dermatologist soon"],
+  bkl:  ["low","Usually benign — still worth confirming"],
+  df:   ["low","Usually benign — still worth confirming"],
+  mel:  ["high","Urgent dermatology review"],
+  nv:   ["low","Usually benign — still worth confirming"],
+  vasc: ["low","Usually benign — still worth confirming"]
+};
+ 
+const CARE = {
+  akiec:[
+    "Get it examined by a dermatologist promptly — actinic keratoses and early squamous cell carcinoma can progress if left untreated.",
+    "Keep the area out of the sun and use broad-spectrum SPF 30+ sunscreen daily.",
+    "Do not pick, scratch, or try to remove the lesion yourself.",
+    "Track any change in size, colour, or texture with dated photographs."
+  ],
+  bcc:[
+    "See a dermatologist soon. Basal cell carcinoma is usually slow-growing and rarely an emergency, but it needs a proper diagnosis and treatment.",
+    "Protect the area from further sun and UV exposure.",
+    "Avoid creams or home remedies before a professional examination.",
+    "Ask your doctor about biopsy and removal options."
+  ],
+  bkl:[
+    "Benign keratosis-like lesions are usually harmless, but have a dermatologist confirm it to rule out anything more serious.",
+    "Watch for changes in size or shape, and for itching or bleeding.",
+    "Avoid irritating the lesion through tight clothing or scratching."
+  ],
+  df:[
+    "Dermatofibromas are generally benign and often need no treatment at all.",
+    "Have a professional confirm the diagnosis, particularly if the lesion is new, painful, or growing.",
+    "Do not squeeze or cut it. If it bothers you cosmetically, discuss removal with a doctor."
+  ],
+  mel:[
+    "Seek an urgent dermatology evaluation. Melanoma can be serious, and early treatment substantially improves outcomes.",
+    "Treat this as a priority rather than something to watch and wait on.",
+    "Keep the area out of the sun and avoid further trauma to the skin.",
+    "Bring a history of how the lesion has changed — asymmetry, border, colour, diameter, evolution — to the appointment."
+  ],
+  nv:[
+    "Common moles are usually benign.",
+    "Check it against the ABCDE rule and have a dermatologist look at any mole that is new or changing.",
+    "Use sunscreen to reduce the chance of change over time."
+  ],
+  vasc:[
+    "Vascular lesions are typically benign, but a dermatologist should confirm that.",
+    "Report bleeding, rapid growth, or a change in colour promptly.",
+    "Avoid trauma to the area, such as shaving over it or scratching it."
+  ]
+};
+ 
+const GENERAL = "This tool is a research prototype, not a diagnostic device. Whatever the prediction above, consult a qualified dermatologist for an accurate diagnosis and appropriate treatment.";
+ 
+const MAX_BYTES = 12 * 1024 * 1024;
+const STORE_KEY = "lesion.server";
+ 
+/* ============================== state ============================== */
+const state = {
+  bitmap:null,      // ImageBitmap, EXIF-corrected
+  blob:null,        // original file, for upload to the server
+  fromCamera:false,
+  server: readServer(),
+  serverOK:false,
+  stream:null
+};
+ 
+function readServer(){
+  try { return (localStorage.getItem(STORE_KEY) || "").trim(); }
+  catch(e){ return ""; }
+}
+function writeServer(v){
+  try { v ? localStorage.setItem(STORE_KEY, v) : localStorage.removeItem(STORE_KEY); }
+  catch(e){ /* private mode — keep it in memory only */ }
+}
+ 
+const $ = id => document.getElementById(id);
+ 
+/* ============================== source tabs ============================== */
+$("tabUpload").addEventListener("click", () => setSource("upload"));
+$("tabCamera").addEventListener("click", () => setSource("camera"));
+ 
+function setSource(which){
+  const upload = which === "upload";
+  $("tabUpload").setAttribute("aria-pressed", String(upload));
+  $("tabCamera").setAttribute("aria-pressed", String(!upload));
+  $("uploadPane").hidden = !upload;
+  $("cameraPane").hidden = upload;
+  if (upload) stopCamera();
+  $("intakeError").innerHTML = "";
+}
+ 
+/* ============================== file intake ============================== */
+const dropzone = $("dropzone");
+const picker = $("filePicker");
+ 
+dropzone.addEventListener("click", () => picker.click());
+dropzone.addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); picker.click(); }
+});
+picker.addEventListener("change", () => {
+  if (picker.files && picker.files[0]) acceptFile(picker.files[0], false);
+  picker.value = "";
+});
+["dragenter","dragover"].forEach(ev =>
+  dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add("hot"); }));
+["dragleave","drop"].forEach(ev =>
+  dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove("hot"); }));
+dropzone.addEventListener("drop", e => {
+  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) acceptFile(f, false);
+});
+ 
+$("camFallback").addEventListener("change", e => {
+  if (e.target.files && e.target.files[0]) acceptFile(e.target.files[0], true);
+  e.target.value = "";
+});
+ 
+async function acceptFile(file, fromCamera){
+  $("intakeError").innerHTML = "";
+  if (!/^image\/(jpeg|jpg|png)$/i.test(file.type)) {
+    return fail("That file type isn't supported. Use a JPG or PNG image.");
+  }
+  if (file.size > MAX_BYTES) {
+    return fail("That image is larger than 12 MB. Export it at a smaller size and try again.");
+  }
+  let bmp;
+  try {
+    bmp = await createImageBitmap(file, { imageOrientation:"from-image" });
+  } catch (err) {
+    try { bmp = await createImageBitmap(file); }
+    catch (e2) { return fail("That image couldn't be read. It may be corrupted or incompletely saved."); }
+  }
+  if (bmp.width < 32 || bmp.height < 32) {
+    return fail("That image is too small to analyse. Use one at least 32 by 32 pixels.");
+  }
+ 
+  state.bitmap = bmp;
+  state.blob = file;
+  state.fromCamera = fromCamera;
+ 
+  $("previewImg").src = bitmapToURL(bmp, 900);
+  $("metaLeft").textContent = fromCamera ? "Captured with the camera" : (file.name || "Selected file");
+  $("metaRight").textContent = `${bmp.width} × ${bmp.height} px · ${(file.size/1024).toFixed(0)} KB`;
+  $("preview").classList.add("on");
+  hideResults();
+  $("preview").scrollIntoView({ behavior:"smooth", block:"nearest" });
+}
+ 
+function fail(msg){
+  $("intakeError").innerHTML = `<div class="alert">${msg}</div>`;
+}
+ 
+function bitmapToURL(bmp, maxSide){
+  const s = Math.min(1, maxSide / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas");
+  c.width = Math.round(bmp.width * s);
+  c.height = Math.round(bmp.height * s);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", 0.92);
+}
+ 
+$("clear").addEventListener("click", () => {
+  state.bitmap = null; state.blob = null; state.fromCamera = false;
+  $("preview").classList.remove("on");
+  $("previewImg").removeAttribute("src");
+  hideResults();
+});
+ 
+/* ============================== camera ============================== */
+$("camStart").addEventListener("click", startCamera);
+$("camStop").addEventListener("click", stopCamera);
+$("camShoot").addEventListener("click", shoot);
+ 
+async function startCamera(){
+  $("camError").innerHTML = "";
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    return cameraFallback("This browser won't open a camera stream here. Use your device camera app instead.");
+  }
+  try {
+    state.stream = await navigator.mediaDevices.getUserMedia({
+      video:{ facingMode:{ ideal:"environment" }, width:{ ideal:1280 }, height:{ ideal:960 } },
+      audio:false
+    });
+  } catch (err) {
+    const why = (err && err.name === "NotAllowedError")
+      ? "Camera access was blocked. Allow it in your browser's site settings, then start the camera again."
+      : (err && err.name === "NotFoundError")
+        ? "No camera was found on this device."
+        : "The camera couldn't be opened. Pages opened from a file:// path can't use it — serve the folder over http://localhost instead.";
+    return cameraFallback(why);
+  }
+  const v = $("video");
+  v.srcObject = state.stream;
+  v.hidden = false;
+  await v.play();
+  $("camStage").classList.remove("empty");
+  $("camPlaceholder").hidden = true;
+  $("reticle").hidden = false;
+  $("camHint").hidden = false;
+  $("camStart").disabled = true;
+  $("camShoot").disabled = false;
+  $("camStop").disabled = false;
+}
+ 
+function cameraFallback(message){
+  $("camError").innerHTML =
+    `<div class="alert">${message}</div>
+     <div class="row"><button class="btn ghost" id="useDeviceCam">Open the device camera</button></div>`;
+  const b = $("useDeviceCam");
+  if (b) b.addEventListener("click", () => $("camFallback").click());
+}
+ 
+function stopCamera(){
+  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
+  const v = $("video");
+  v.srcObject = null; v.hidden = true;
+  $("camStage").classList.add("empty");
+  $("camPlaceholder").hidden = false;
+  $("reticle").hidden = true;
+  $("camHint").hidden = true;
+  $("camStart").disabled = false;
+  $("camShoot").disabled = true;
+  $("camStop").disabled = true;
+}
+ 
+function shoot(){
+  const v = $("video");
+  if (!v.videoWidth) return;
+  const c = document.createElement("canvas");
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext("2d").drawImage(v, 0, 0);
+  c.toBlob(blob => {
+    if (!blob) return fail("The photo couldn't be captured. Try again.");
+    const file = new File([blob], "capture.jpg", { type:"image/jpeg" });
+    acceptFile(file, true);
+    stopCamera();
+  }, "image/jpeg", 0.94);
+}
+ 
+/* ============================== server check ============================== */
+async function pingServer(base){
+  if (!base) return false;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 3500);
+  try {
+    const r = await fetch(base.replace(/\/+$/,"") + "/health", { signal:ctrl.signal });
+    return r.ok;
+  } catch (e) { return false; }
+  finally { clearTimeout(t); }
+}
+ 
+async function refreshEngine(){
+  const dot = $("engineDot"), txt = $("engineText");
+  dot.className = "dot"; txt.textContent = "Checking model…";
+  state.serverOK = await pingServer(state.server);
+  if (state.serverOK) { dot.className = "dot live"; txt.textContent = "Model connected"; }
+  else { dot.className = "dot sim"; txt.textContent = state.server ? "Server unreachable — simulated" : "Simulated mode"; }
+}
+ 
+/* ============================== config dialog ============================== */
+const cfg = $("cfg");
+$("openCfg").addEventListener("click", () => { $("cfgUrl").value = state.server; $("cfgStatus").innerHTML = ""; cfg.showModal(); });
+$("cfgCancel").addEventListener("click", () => cfg.close());
+$("cfgSave").addEventListener("click", async () => {
+  const v = $("cfgUrl").value.trim().replace(/\/+$/,"");
+  $("cfgStatus").innerHTML = `<p class="hint">Testing the connection…</p>`;
+  state.server = v; writeServer(v);
+  await refreshEngine();
+  if (!v) { cfg.close(); return; }
+  if (state.serverOK) { cfg.close(); }
+  else $("cfgStatus").innerHTML = `<div class="alert">Nothing answered at that address. Check the server is running and that CORS allows this page.</div>`;
+});
+ 
+/* ============================== analysis ============================== */
+$("analyze").addEventListener("click", analyse);
+ 
+async function analyse(){
+  if (!state.bitmap) return;
+  const btn = $("analyze");
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span>Analysing…`;
+  $("intakeError").innerHTML = "";
+ 
+  let result = null, simulated = false;
+ 
+  if (state.server) {
+    try { result = await serverPredict(); }
+    catch (err) {
+      $("intakeError").innerHTML =
+        `<div class="alert">The inference server didn't respond (${escapeHTML(err.message)}). Showing a simulated result instead.</div>`;
+    }
+  }
+  if (!result) { result = await simulate(); simulated = true; }
+ 
+  render(result, simulated);
+  btn.disabled = false;
+  btn.textContent = "Analyse image";
+}
+ 
+async function serverPredict(){
+  const fd = new FormData();
+  fd.append("file", state.blob, state.blob.name || "image.jpg");
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 60000);
+  let r;
+  try {
+    r = await fetch(state.server.replace(/\/+$/,"") + "/predict", { method:"POST", body:fd, signal:ctrl.signal });
+  } finally { clearTimeout(t); }
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  const j = await r.json();
+  if (!j || !j.probs) throw new Error("unexpected response");
+ 
+  const probs = CLASSES.map(c => Number(j.probs[c]) || 0);
+  const idx = probs.indexOf(Math.max(...probs));
+  return {
+    cls: j.pred_class || CLASSES[idx],
+    conf: j.confidence != null ? Number(j.confidence) : probs[idx],
+    probs,
+    original: j.original || null,
+    gradcam: j.gradcam || null,
+    attention: j.attention || null
+  };
+}
+ 
+/* ---------- simulated mode ----------
+   Saliency is computed from the actual pixels so the maps respond to the
+   image, but none of this is model output. It exists so the interface can
+   be reviewed without a Python process running. It is labelled as such
+   everywhere it appears. */
+async function simulate(){
+  const N = 224;
+  const c = document.createElement("canvas");
+  c.width = N; c.height = N;
+  const ctx = c.getContext("2d", { willReadFrequently:true });
+  ctx.drawImage(state.bitmap, 0, 0, N, N);
+  const px = ctx.getImageData(0, 0, N, N).data;
+ 
+  const G = 56, cell = N / G;
+  const dev = new Float32Array(G * G);
+  const dark = new Float32Array(G * G);
+ 
+  let mr=0, mg=0, mb=0, n=0;
+  for (let i = 0; i < px.length; i += 4){ mr += px[i]; mg += px[i+1]; mb += px[i+2]; n++; }
+  mr/=n; mg/=n; mb/=n;
+ 
+  for (let gy = 0; gy < G; gy++){
+    for (let gx = 0; gx < G; gx++){
+      let d = 0, l = 0, k = 0;
+      const x0 = Math.floor(gx*cell), y0 = Math.floor(gy*cell);
+      for (let y = y0; y < y0+cell && y < N; y++){
+        for (let x = x0; x < x0+cell && x < N; x++){
+          const i = (y*N + x) * 4;
+          d += Math.abs(px[i]-mr) + Math.abs(px[i+1]-mg) + Math.abs(px[i+2]-mb);
+          l += 255 - (0.299*px[i] + 0.587*px[i+1] + 0.114*px[i+2]);
+          k++;
+        }
+      }
+      dev[gy*G+gx] = d/k; dark[gy*G+gx] = l/k;
+    }
+  }
+ 
+  // radial prior: lesions sit near the middle of a framed image
+  for (let gy = 0; gy < G; gy++){
+    for (let gx = 0; gx < G; gx++){
+      const nx = (gx+0.5)/G - 0.5, ny = (gy+0.5)/G - 0.5;
+      const w = Math.exp(-(nx*nx + ny*ny) / 0.085);
+      dev[gy*G+gx] *= (0.45 + 0.55*w);
+      dark[gy*G+gx] *= (0.35 + 0.65*w);
+    }
+  }
+ 
+  const cam = normalise(blur(dev, G, 3));
+  const attn = normalise(blur(dark, G, 2));
+ 
+  // deterministic pseudo-probabilities from image statistics
+  let energy = 0, hetero = 0;
+  for (let i = 0; i < cam.length; i++){ energy += cam[i]; }
+  energy /= cam.length;
+  for (let i = 1; i < dev.length; i++){ hetero += Math.abs(dev[i] - dev[i-1]); }
+  hetero = hetero / dev.length / 40;
+ 
+  const seed = Math.round((energy*9973 + hetero*7919 + mr*17 + mg*31 + mb*47) * 1000) >>> 0;
+  const rnd = mulberry(seed);
+  const base = [0.6, 0.7, 1.0, 0.4, 0.8, 1.6, 0.35];
+  const logits = base.map((b,i) => b*2.2 + rnd()*1.1 + (i===4 ? hetero*1.6 : 0) + (i===5 ? (1-energy)*1.4 : 0));
+  const mx = Math.max(...logits);
+  const ex = logits.map(v => Math.exp((v-mx)*1.35));
+  const sum = ex.reduce((a,b)=>a+b,0);
+  const probs = ex.map(v => v/sum);
+  const idx = probs.indexOf(Math.max(...probs));
+ 
+  return {
+    cls: CLASSES[idx],
+    conf: probs[idx],
+    probs,
+    grid:{ size:G, cam, attn }
+  };
+}
+ 
+function blur(src, G, passes){
+  let a = Float32Array.from(src), b = new Float32Array(G*G);
+  for (let p = 0; p < passes; p++){
+    for (let y = 0; y < G; y++){
+      for (let x = 0; x < G; x++){
+        let s = 0, k = 0;
+        for (let dy = -1; dy <= 1; dy++){
+          for (let dx = -1; dx <= 1; dx++){
+            const yy = y+dy, xx = x+dx;
+            if (yy<0||yy>=G||xx<0||xx>=G) continue;
+            s += a[yy*G+xx]; k++;
+          }
+        }
+        b[y*G+x] = s/k;
+      }
+    }
+    const t = a; a = b; b = t;
+  }
+  return a;
+}
+ 
+function normalise(arr){
+  let lo = Infinity, hi = -Infinity;
+  for (const v of arr){ if (v < lo) lo = v; if (v > hi) hi = v; }
+  const r = hi - lo || 1;
+  const out = new Float32Array(arr.length);
+  for (let i = 0; i < arr.length; i++) out[i] = (arr[i] - lo) / r;
+  return out;
+}
+ 
+function mulberry(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+ 
+/* jet-like ramp, matching the matplotlib look of the Python overlays */
+function ramp(t){
+  const stops = [
+    [0.00,  44, 62,143],
+    [0.28,  46,154,168],
+    [0.52,  99,194,107],
+    [0.76, 232,212, 74],
+    [1.00, 217, 67, 44]
+  ];
+  t = Math.max(0, Math.min(1, t));
+  for (let i = 1; i < stops.length; i++){
+    if (t <= stops[i][0]){
+      const a = stops[i-1], b = stops[i];
+      const f = (t - a[0]) / (b[0] - a[0] || 1);
+      return [ a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f, a[3]+(b[3]-a[3])*f ];
+    }
+  }
+  return [217,67,44];
+}
+ 
+function paintGrid(canvas, grid, G, gamma){
+  const S = 224;
+  canvas.width = S; canvas.height = S;
+  const ctx = canvas.getContext("2d");
+  const small = document.createElement("canvas");
+  small.width = G; small.height = G;
+  const sctx = small.getContext("2d");
+  const img = sctx.createImageData(G, G);
+  for (let i = 0; i < G*G; i++){
+    const t = Math.pow(grid[i], gamma);
+    const [r,g,b] = ramp(t);
+    img.data[i*4]   = r;
+    img.data[i*4+1] = g;
+    img.data[i*4+2] = b;
+    img.data[i*4+3] = Math.round(255 * Math.min(1, 0.15 + t*0.95));
+  }
+  sctx.putImageData(img, 0, 0);
+  ctx.clearRect(0,0,S,S);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(small, 0, 0, S, S);
+}
+ 
+/* ============================== render ============================== */
+function hideResults(){
+  $("results").classList.remove("on");
+  $("explainPanel").style.display = "none";
+  $("idleState").style.display = "block";
+}
+ 
+function render(res, simulated){
+  const cls = CLASSES.includes(res.cls) ? res.cls : CLASSES[res.probs.indexOf(Math.max(...res.probs))];
+  const [level, label] = TRIAGE[cls];
+ 
+  $("idleState").style.display = "none";
+  $("results").classList.add("on");
+ 
+  $("simBanner").innerHTML = simulated
+    ? `<div class="notice" style="margin-bottom:16px"><strong>Simulated result.</strong> No trained model is connected, so the class scores and maps below were generated in the browser from image statistics. They carry no clinical or scientific meaning. Connect the inference server for real output.</div>`
+    : "";
+ 
+  $("camBanner").innerHTML = state.fromCamera
+    ? `<div class="notice" style="margin-bottom:16px">This photograph came from a camera. The model was trained on dermoscopic images, which look quite different, so treat this result as a demonstration of the pipeline.</div>`
+    : "";
+ 
+  $("rail").className = "rail " + level;
+  $("triage").className = "triage " + level;
+  $("triage").textContent = label;
+  $("dxName").textContent = FULL[cls];
+  $("dxCode").textContent = "class code · " + cls;
+ 
+  const conf = Math.max(0, Math.min(1, res.conf));
+  $("confVal").textContent = (conf*100).toFixed(2) + "%";
+  $("confFill").style.width = "0%";
+  requestAnimationFrame(() => { $("confFill").style.width = (conf*100).toFixed(1) + "%"; });
+ 
+  $("careList").innerHTML = CARE[cls].map(t => `<li>${escapeHTML(t)}</li>`).join("");
+  $("generalNote").textContent = GENERAL;
+ 
+  const order = CLASSES.map((c,i) => ({ c, p:res.probs[i] })).sort((a,b) => b.p - a.p);
+  $("probList").innerHTML = order.map(o => `
+    <div class="prob ${o.c === cls ? "lead" : ""}">
+      <div class="prob-top">
+        <span class="nm">${escapeHTML(FULL[o.c])}</span>
+        <span class="vl">${(o.p*100).toFixed(2)}%</span>
+      </div>
+      <div class="prob-track"><div class="prob-fill" style="width:0"></div></div>
+    </div>`).join("");
+  requestAnimationFrame(() => {
+    document.querySelectorAll("#probList .prob-fill").forEach((el, i) => {
+      el.style.width = (order[i].p*100).toFixed(1) + "%";
+    });
+  });
+ 
+  // explainability plates
+  const inputURL = res.original || bitmapToURL(state.bitmap, 224);
+  $("plateOrig").src = inputURL;
+  $("plateCamBase").src = inputURL;
+  $("plateAttnBase").src = inputURL;
+ 
+  const camCv = $("plateCam"), attnCv = $("plateAttn");
+  if (res.gradcam || res.attention){
+    // the server sent rendered overlays — draw them straight in
+    drawImageURL(camCv, res.gradcam);
+    drawImageURL(attnCv, res.attention);
+  } else if (res.grid){
+    paintGrid(camCv, res.grid.cam, res.grid.size, 1.35);
+    paintGrid(attnCv, res.grid.attn, res.grid.size, 1.6);
+  }
+  applyOpacity();
+  $("explainPanel").style.display = "block";
+}
+ 
+function drawImageURL(canvas, url){
+  if (!url){ canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height); return; }
+  const im = new Image();
+  im.crossOrigin = "anonymous";
+  im.onload = () => {
+    canvas.width = im.naturalWidth; canvas.height = im.naturalHeight;
+    canvas.getContext("2d").drawImage(im, 0, 0);
+  };
+  im.src = url;
+}
+ 
+const opacity = $("opacity");
+opacity.addEventListener("input", applyOpacity);
+function applyOpacity(){
+  const v = Number(opacity.value) / 100;
+  $("plateCam").style.opacity = v;
+  $("plateAttn").style.opacity = v;
+  $("opacityVal").textContent = opacity.value + "%";
+}
+ 
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g, ch =>
+    ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
+}
+ 
+/* ============================== boot ============================== */
+applyOpacity();
+refreshEngine();
+window.addEventListener("pagehide", stopCamera);
+</script>
+</body>
+</html>
+ 
