@@ -323,9 +323,9 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
     <h2>Model source</h2>
     <p>The model runs entirely in this browser tab via ONNX Runtime — no server. It only needs to fetch two static files once.</p>
     <label class="fld" for="cfgModel">Model file (.onnx)</label>
-    <input type="text" id="cfgModel" placeholder="https://huggingface.co/sai2318/best/resolve/main/model.onnx" spellcheck="false">
+    <input type="text" id="cfgModel" placeholder="https://huggingface.co/sai2318/best" spellcheck="false">
     <label class="fld" for="cfgMeta">Metadata file (.json)</label>
-    <input type="text" id="cfgMeta" placeholder="https://huggingface.co/sai2318/best/resolve/main/model_meta.json" spellcheck="false">
+    <input type="text" id="cfgMeta" placeholder="https://huggingface.co/sai2318/best" spellcheck="false">
     <p class="hint">These default to the model hosted at <code>huggingface.co/sai2318/best</code>. Change them only if you move the model elsewhere. Without a reachable model file, the page runs in simulated mode, where the maps and probabilities are generated in the browser and are <strong>not</strong> model output.</p>
     <div id="cfgStatus"></div>
   </div>
