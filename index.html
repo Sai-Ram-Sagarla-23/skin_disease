@@ -323,10 +323,10 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
     <h2>Model source</h2>
     <p>The model runs entirely in this browser tab via ONNX Runtime — no server. It only needs to fetch two static files once.</p>
     <label class="fld" for="cfgModel">Model file (.onnx)</label>
-    <input type="text" id="cfgModel" placeholder="model.onnx" spellcheck="false">
+    <input type="text" id="cfgModel" placeholder="https://huggingface.co/sai2318/best/resolve/main/model.onnx" spellcheck="false">
     <label class="fld" for="cfgMeta">Metadata file (.json)</label>
-    <input type="text" id="cfgMeta" placeholder="model_meta.json" spellcheck="false">
-    <p class="hint">Leave both as the defaults if <code>model.onnx</code> and <code>model_meta.json</code> sit next to this page. Point them at a full URL (e.g. a Hugging Face model repo) if you're hosting the model file elsewhere. Without a reachable model file, the page runs in simulated mode, where the maps and probabilities are generated in the browser and are <strong>not</strong> model output.</p>
+    <input type="text" id="cfgMeta" placeholder="https://huggingface.co/sai2318/best/resolve/main/model_meta.json" spellcheck="false">
+    <p class="hint">These default to the model hosted at <code>huggingface.co/sai2318/best</code>. Change them only if you move the model elsewhere. Without a reachable model file, the page runs in simulated mode, where the maps and probabilities are generated in the browser and are <strong>not</strong> model output.</p>
     <div id="cfgStatus"></div>
   </div>
   <div class="dlg-foot">
@@ -410,8 +410,8 @@ const STORE_KEY = "lesion.modelSource";
  
 const state = {
   bitmap:null, blob:null, fromCamera:false,
-  modelUrl: readCfg("model", "model.onnx"),
-  metaUrl: readCfg("meta", "model_meta.json"),
+  modelUrl: readCfg("model", "https://huggingface.co/sai2318/best/resolve/main/model.onnx"),
+  metaUrl: readCfg("meta", "https://huggingface.co/sai2318/best/resolve/main/model_meta.json"),
   session:null, meta:null, ready:false,
   stream:null
 };
@@ -553,8 +553,8 @@ const cfg = $("cfg");
 $("openCfg").addEventListener("click", () => { $("cfgModel").value = state.modelUrl; $("cfgMeta").value = state.metaUrl; $("cfgStatus").innerHTML = ""; cfg.showModal(); });
 $("cfgCancel").addEventListener("click", () => cfg.close());
 $("cfgSave").addEventListener("click", async () => {
-  state.modelUrl = $("cfgModel").value.trim() || "model.onnx";
-  state.metaUrl = $("cfgMeta").value.trim() || "model_meta.json";
+  state.modelUrl = $("cfgModel").value.trim() || "https://huggingface.co/sai2318/best/resolve/main/model.onnx";
+  state.metaUrl = $("cfgMeta").value.trim() || "https://huggingface.co/sai2318/best/resolve/main/model_meta.json";
   writeCfg("model", state.modelUrl); writeCfg("meta", state.metaUrl);
   $("cfgStatus").innerHTML = `<p class="hint">Loading…</p>`;
   await loadModel();
