@@ -23,10 +23,10 @@ html,body{margin:0;padding:0}
 body{background:var(--bone);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 button,input,select{font:inherit;color:inherit}
 h1,h2,h3{margin:0;font-weight:600;letter-spacing:-0.01em}
-
+ 
 .ribbon{background:var(--ink);color:#E8EDEC;font-size:13px;padding:9px 20px;display:flex;gap:10px;align-items:baseline;justify-content:center;text-align:center;flex-wrap:wrap}
 .ribbon strong{color:#fff;font-weight:600}
-
+ 
 .masthead{border-bottom:1px solid var(--line);background:var(--card)}
 .masthead-inner{max-width:1180px;margin:0 auto;padding:22px 24px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .wordmark{font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:-0.015em;line-height:1.1}
@@ -38,42 +38,42 @@ h1,h2,h3{margin:0;font-weight:600;letter-spacing:-0.01em}
 @keyframes pulse{50%{opacity:.35}}
 .linkish{background:none;border:none;padding:0;cursor:pointer;color:var(--teal);text-decoration:underline;text-underline-offset:3px;font-size:13px}
 .linkish:hover{color:var(--teal-deep)}
-
+ 
 main{max-width:1180px;margin:0 auto;padding:24px 24px 70px}
 .workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
 @media(max-width:900px){.workspace{grid-template-columns:1fr}main{padding:18px 14px 50px}}
-
+ 
 .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius)}
 .panel-head{padding:16px 18px 13px;border-bottom:1px solid var(--line)}
 .panel-head h2{font-size:15px}
 .panel-head p{margin:3px 0 0;color:var(--slate);font-size:12.8px}
 .panel-body{padding:18px}
 @media(max-width:480px){.panel-head{padding:14px 14px 12px}.panel-body{padding:14px}}
-
+ 
 .switch{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bone-2);width:100%}
 .switch button{flex:1;border:none;background:transparent;padding:9px 10px;cursor:pointer;font-size:13.3px;font-weight:500;color:var(--slate)}
 .switch button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:inset 0 -2px 0 var(--teal)}
 .switch button:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
-
+ 
 .dropzone{margin-top:16px;border:1.5px dashed var(--line);border-radius:var(--radius);background:var(--bone);padding:34px 18px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
 .dropzone:hover,.dropzone.hot{border-color:var(--teal);background:#EAF1F1}
 .dropzone:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 .dropzone .big{font-size:14.5px;font-weight:500}
 .dropzone .small{color:var(--slate);font-size:12.6px;margin-top:5px}
 .icon{width:24px;height:24px;stroke:var(--teal);fill:none;stroke-width:1.6;margin-bottom:8px}
-
+ 
 .camstage{margin-top:16px;border-radius:var(--radius);overflow:hidden;background:#0E1418;position:relative;aspect-ratio:4/3;width:100%}
 .camstage video{width:100%;height:100%;object-fit:cover;display:block}
 .camstage .reticle{position:absolute;inset:14% 20%;border:1.5px solid rgba(255,255,255,.55);border-radius:50%;box-shadow:0 0 0 9999px rgba(10,16,20,.28);pointer-events:none}
 .camstage .hint{position:absolute;left:0;right:0;bottom:10px;text-align:center;color:#D7E0DF;font-size:12px;text-shadow:0 1px 3px rgba(0,0,0,.6);padding:0 10px}
 .camstage.empty{display:flex;align-items:center;justify-content:center;color:#8A9AA3;font-size:13px;padding:16px;text-align:center}
-
+ 
 .preview{margin-top:16px;display:none}
 .preview.on{display:block}
 .preview-frame{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--bone-2);display:flex;align-items:center;justify-content:center;max-height:320px}
 .preview-frame img{max-width:100%;max-height:320px;display:block}
 .filemeta{display:flex;justify-content:space-between;gap:12px;margin-top:9px;font-size:12px;color:var(--slate);flex-wrap:wrap}
-
+ 
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .btn{border:1px solid var(--teal);background:var(--teal);color:#fff;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:13.8px;font-weight:500;transition:background .15s;flex:1;min-width:130px}
 .btn:hover{background:var(--teal-deep);border-color:var(--teal-deep)}
@@ -81,16 +81,16 @@ main{max-width:1180px;margin:0 auto;padding:24px 24px 70px}
 .btn.ghost{background:transparent;color:var(--ink-soft);border-color:var(--line);flex:none}
 .btn.ghost:hover{background:var(--bone-2);border-color:var(--slate)}
 .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-
+ 
 .state{padding:36px 18px;text-align:center;color:var(--slate);font-size:13.3px}
 .state .lead{color:var(--ink-soft);font-size:14.3px;margin-bottom:5px}
 .alert{border-left:3px solid var(--crimson);background:#FBF0F0;color:#71181F;padding:11px 14px;border-radius:0 6px 6px 0;font-size:13.3px;margin-top:14px}
 .notice{border-left:3px solid var(--ochre);background:#FBF5EC;color:#6E4917;padding:11px 14px;border-radius:0 6px 6px 0;font-size:13px}
-
+ 
 #results{display:none} #results.on{display:block;animation:rise .35s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){#results.on{animation:none}}
-
+ 
 .verdict{display:flex;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--card)}
 .rail{width:6px;flex:none;background:var(--slate)}
 .rail.high{background:var(--crimson)} .rail.mid{background:var(--ochre)} .rail.low{background:var(--green)}
@@ -99,18 +99,18 @@ main{max-width:1180px;margin:0 auto;padding:24px 24px 70px}
 .triage.high{color:var(--crimson)} .triage.mid{color:var(--ochre)} .triage.low{color:var(--green)}
 .dx{font-family:var(--serif);font-size:24px;line-height:1.2;margin:4px 0 2px;font-weight:600;word-break:break-word}
 .dxcode{color:var(--slate);font-size:12.6px;font-family:var(--serif);font-style:italic}
-
+ 
 .confwrap{margin-top:14px}
 .conflabel{display:flex;justify-content:space-between;font-size:12.8px;color:var(--slate);margin-bottom:6px}
 .conflabel b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 .confbar{height:7px;background:var(--bone-2);border-radius:99px;overflow:hidden}
 .conffill{height:100%;width:0;background:var(--teal);border-radius:99px;transition:width .6s cubic-bezier(.2,.7,.3,1)}
 @media(prefers-reduced-motion:reduce){.conffill{transition:none}}
-
+ 
 .section{margin-top:20px}
 .section h3{font-size:13.6px;margin-bottom:11px}
 .section h3 span{color:var(--slate);font-weight:400;font-size:12.6px}
-
+ 
 .prob{margin-bottom:10px}
 .prob-top{display:flex;justify-content:space-between;gap:10px;font-size:12.8px;margin-bottom:4px}
 .prob-top .nm{color:var(--ink-soft);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -120,14 +120,14 @@ main{max-width:1180px;margin:0 auto;padding:24px 24px 70px}
 .prob.lead .prob-top .nm{color:var(--ink);font-weight:500}
 .prob.lead .prob-top .vl{color:var(--ink)}
 .prob.lead .prob-fill{background:var(--teal)}
-
+ 
 ul.care{margin:0;padding:0;list-style:none}
 ul.care li{padding:9px 0 9px 20px;position:relative;border-top:1px solid var(--line);font-size:13.3px;color:var(--ink-soft);line-height:1.5}
 ul.care li:first-child{border-top:none}
 ul.care li::before{content:"";position:absolute;left:3px;top:17px;width:6px;height:6px;border-radius:50%;background:var(--teal)}
 ul.care.tx li::before{background:var(--ink-soft)}
 .general{margin-top:13px;font-size:12.5px;color:var(--slate);border-top:1px solid var(--line);padding-top:11px}
-
+ 
 .explain{margin-top:20px}
 .triptych{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:760px){.triptych{grid-template-columns:1fr}}
@@ -138,12 +138,12 @@ ul.care.tx li::before{background:var(--ink-soft)}
 .plate figcaption{margin-top:8px}
 .plate .ttl{font-size:13.2px;font-weight:500}
 .plate .desc{font-size:12.3px;color:var(--slate);margin-top:2px;line-height:1.45}
-
+ 
 .slider{display:flex;align-items:center;gap:12px;margin-top:15px;font-size:12.8px;color:var(--slate);flex-wrap:wrap}
 .slider input{flex:1;max-width:240px;accent-color:var(--teal)}
 .scale{display:flex;align-items:center;gap:8px;font-size:11.8px;color:var(--slate);margin-top:6px;flex-wrap:wrap}
 .scale .bar{height:7px;flex:1;max-width:180px;border-radius:99px;background:linear-gradient(90deg,#2C3E8F,#2E9AA8,#63C26B,#E8D44A,#D9432C)}
-
+ 
 dialog{border:1px solid var(--line);border-radius:var(--radius);padding:0;max-width:520px;width:calc(100% - 32px);background:var(--card);color:var(--ink)}
 dialog::backdrop{background:rgba(19,30,38,.45)}
 .dlg-body{padding:20px}
@@ -156,7 +156,7 @@ input[type=text]:focus{outline:2px solid var(--teal);outline-offset:-1px;border-
 .hint{font-size:12.2px;color:var(--slate);margin-top:7px;line-height:1.5}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.2px;background:var(--bone-2);padding:1px 5px;border-radius:4px}
 .dlg-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--line);background:var(--bone);flex-wrap:wrap}
-
+ 
 footer{max-width:1180px;margin:0 auto;padding:0 24px 46px;color:var(--slate);font-size:12.4px}
 footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
 .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:8px;animation:spin .7s linear infinite}
@@ -165,11 +165,11 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
 </style>
 </head>
 <body>
-
+ 
 <div class="ribbon">
   <span><strong>Research prototype — not a medical device.</strong> Nothing here is a diagnosis. Any real skin concern belongs with a qualified dermatologist.</span>
 </div>
-
+ 
 <header class="masthead">
   <div class="masthead-inner">
     <div>
@@ -183,10 +183,10 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
     </div>
   </div>
 </header>
-
+ 
 <main>
   <div class="workspace">
-
+ 
     <section class="panel" aria-labelledby="intakeH">
       <div class="panel-head">
         <h2 id="intakeH">Image</h2>
@@ -197,7 +197,7 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
           <button id="tabUpload" aria-pressed="true">Upload a file</button>
           <button id="tabCamera" aria-pressed="false">Use the camera</button>
         </div>
-
+ 
         <div id="uploadPane">
           <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose an image or drop one here">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M3.5 15v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"/></svg>
@@ -206,7 +206,7 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
           </div>
           <input type="file" id="filePicker" accept="image/jpeg,image/png,image/jpg" class="sr">
         </div>
-
+ 
         <div id="cameraPane" hidden>
           <div class="camstage empty" id="camStage">
             <span id="camPlaceholder">The camera is off. Start it to frame the lesion.</span>
@@ -222,7 +222,7 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
           <input type="file" id="camFallback" accept="image/*" capture="environment" class="sr">
           <div id="camError"></div>
         </div>
-
+ 
         <div class="preview" id="preview">
           <div class="preview-frame"><img id="previewImg" alt="The image you selected"></div>
           <div class="filemeta"><span id="metaLeft"></span><span id="metaRight"></span></div>
@@ -231,26 +231,26 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
             <button class="btn ghost" id="clear">Remove image</button>
           </div>
         </div>
-
+ 
         <div id="intakeError"></div>
       </div>
     </section>
-
+ 
     <section class="panel" aria-labelledby="findH" aria-live="polite">
       <div class="panel-head">
         <h2 id="findH">Findings</h2>
         <p>Seven HAM10000 lesion classes, ranked by probability.</p>
       </div>
-
+ 
       <div class="state" id="idleState">
         <div class="lead">No image analysed yet</div>
         Pick a file or take a photo, then choose <em>Analyse image</em>.
       </div>
-
+ 
       <div class="panel-body" id="results">
         <div id="simBanner"></div>
         <div id="camBanner"></div>
-
+ 
         <div class="verdict">
           <div class="rail" id="rail"></div>
           <div class="verdict-body">
@@ -263,18 +263,18 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
             </div>
           </div>
         </div>
-
+ 
         <div class="section">
           <h3>Precautions <span>· for the predicted class</span></h3>
           <ul class="care" id="careList"></ul>
         </div>
-
+ 
         <div class="section">
           <h3>Common treatments <span>· general information, not a prescription</span></h3>
           <ul class="care tx" id="txList"></ul>
           <p class="general" id="generalNote"></p>
         </div>
-
+ 
         <div class="section">
           <h3>All class probabilities</h3>
           <div id="probList"></div>
@@ -282,7 +282,7 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
       </div>
     </section>
   </div>
-
+ 
   <section class="panel explain" id="explainPanel" style="display:none" aria-labelledby="expH">
     <div class="panel-head">
       <h2 id="expH">What the model looked at</h2>
@@ -312,12 +312,12 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
     </div>
   </section>
 </main>
-
+ 
 <footer>
   <hr>
   <p>Predictions come from a hybrid ResNet50 + ViT model trained on HAM10000 dermoscopic images, running client-side via ONNX Runtime Web. Photographs from a phone or webcam differ substantially from that distribution, so camera results are a demonstration of the pipeline rather than a meaningful assessment. Nothing in this interface replaces examination by a clinician.</p>
 </footer>
-
+ 
 <dialog id="cfg">
   <div class="dlg-body">
     <h2>Model source</h2>
@@ -334,25 +334,25 @@ footer hr{border:none;border-top:1px solid var(--line);margin:0 0 15px}
     <button class="btn" id="cfgSave">Save and reload</button>
   </div>
 </dialog>
-
+ 
 <script>
 "use strict";
-
+ 
 const CLASSES = ["akiec","bcc","bkl","df","mel","nv","vasc"];
-
+ 
 const FULL = {
   akiec:"Actinic keratoses and intraepithelial carcinoma", bcc:"Basal cell carcinoma",
   bkl:"Benign keratosis-like lesions", df:"Dermatofibroma", mel:"Melanoma",
   nv:"Melanocytic nevi", vasc:"Vascular lesions"
 };
-
+ 
 const TRIAGE = {
   akiec:["mid","See a dermatologist promptly"], bcc:["mid","See a dermatologist soon"],
   bkl:["low","Usually benign — still worth confirming"], df:["low","Usually benign — still worth confirming"],
   mel:["high","Urgent dermatology review"], nv:["low","Usually benign — still worth confirming"],
   vasc:["low","Usually benign — still worth confirming"]
 };
-
+ 
 const CARE = {
   akiec:["Get it examined by a dermatologist promptly — actinic keratoses and early squamous cell carcinoma can progress if left untreated.",
          "Keep the area out of the sun and use broad-spectrum SPF 30+ sunscreen daily.",
@@ -379,7 +379,7 @@ const CARE = {
         "Report bleeding, rapid growth, or a change in colour promptly.",
         "Avoid trauma to the area, such as shaving over it or scratching it."]
 };
-
+ 
 // General, textbook-level treatment approaches — not personalised dosing or a
 // prescription. Actual treatment choice always belongs to the treating
 // dermatologist based on staging, health history and the specific lesion.
@@ -402,12 +402,12 @@ const TREATMENT = {
   vasc:["Usually no medical treatment necessary.",
         "Pulsed dye laser is the common option when removal is wanted for cosmetic or symptomatic reasons."]
 };
-
+ 
 const GENERAL = "This is general information about how these conditions are typically managed, not a personal treatment plan. The right treatment depends on staging, health history and direct examination — only a dermatologist can decide that for you.";
-
+ 
 const MAX_BYTES = 12 * 1024 * 1024;
 const STORE_KEY = "lesion.modelSource";
-
+ 
 const state = {
   bitmap:null, blob:null, fromCamera:false,
   modelUrl: readCfg("model", "model.onnx"),
@@ -415,7 +415,7 @@ const state = {
   session:null, meta:null, ready:false,
   stream:null
 };
-
+ 
 function readCfg(k, fallback){
   try { return localStorage.getItem(STORE_KEY + "." + k) || fallback; }
   catch(e){ return fallback; }
@@ -424,9 +424,9 @@ function writeCfg(k, v){
   try { v ? localStorage.setItem(STORE_KEY + "." + k, v) : localStorage.removeItem(STORE_KEY + "." + k); }
   catch(e){ /* private mode — session only */ }
 }
-
+ 
 const $ = id => document.getElementById(id);
-
+ 
 $("tabUpload").addEventListener("click", () => setSource("upload"));
 $("tabCamera").addEventListener("click", () => setSource("camera"));
 function setSource(which){
@@ -438,7 +438,7 @@ function setSource(which){
   if (upload) stopCamera();
   $("intakeError").innerHTML = "";
 }
-
+ 
 const dropzone = $("dropzone"), picker = $("filePicker");
 dropzone.addEventListener("click", () => picker.click());
 dropzone.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); picker.click(); } });
@@ -447,7 +447,7 @@ picker.addEventListener("change", () => { if (picker.files && picker.files[0]) a
 ["dragleave","drop"].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove("hot"); }));
 dropzone.addEventListener("drop", e => { const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) acceptFile(f, false); });
 $("camFallback").addEventListener("change", e => { if (e.target.files && e.target.files[0]) acceptFile(e.target.files[0], true); e.target.value = ""; });
-
+ 
 async function acceptFile(file, fromCamera){
   $("intakeError").innerHTML = "";
   if (!/^image\/(jpeg|jpg|png)$/i.test(file.type)) return fail("That file type isn't supported. Use a JPG or PNG image.");
@@ -459,7 +459,7 @@ async function acceptFile(file, fromCamera){
     catch (e2) { return fail("That image couldn't be read. It may be corrupted or incompletely saved."); }
   }
   if (bmp.width < 32 || bmp.height < 32) return fail("That image is too small to analyse. Use one at least 32 by 32 pixels.");
-
+ 
   state.bitmap = bmp; state.blob = file; state.fromCamera = fromCamera;
   $("previewImg").src = bitmapToURL(bmp, 900);
   $("metaLeft").textContent = fromCamera ? "Captured with the camera" : (file.name || "Selected file");
@@ -481,7 +481,7 @@ $("clear").addEventListener("click", () => {
   $("preview").classList.remove("on"); $("previewImg").removeAttribute("src");
   hideResults();
 });
-
+ 
 $("camStart").addEventListener("click", startCamera);
 $("camStop").addEventListener("click", stopCamera);
 $("camShoot").addEventListener("click", shoot);
@@ -522,7 +522,7 @@ function shoot(){
     stopCamera();
   }, "image/jpeg", 0.94);
 }
-
+ 
 /* ============================== model loading ============================== */
 async function loadModel(){
   const dot = $("engineDot"), txt = $("engineText");
@@ -532,21 +532,22 @@ async function loadModel(){
     const metaRes = await fetch(state.metaUrl, { cache:"no-store" });
     if (!metaRes.ok) throw new Error("metadata not found");
     state.meta = await metaRes.json();
-
+ 
     if (typeof ort === "undefined") throw new Error("onnxruntime-web failed to load");
     ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/";
     state.session = await ort.InferenceSession.create(state.modelUrl, { executionProviders:["wasm"] });
-
+ 
     state.ready = true;
     dot.className = "dot live";
     txt.textContent = "Model loaded — running in your browser";
   } catch (err) {
     state.ready = false;
     dot.className = "dot sim";
-    txt.textContent = "No model file found — simulated mode";
+    txt.textContent = "Simulated mode — " + err.message;
+    console.error("Model load failed:", err);
   }
 }
-
+ 
 /* ============================== config dialog ============================== */
 const cfg = $("cfg");
 $("openCfg").addEventListener("click", () => { $("cfgModel").value = state.modelUrl; $("cfgMeta").value = state.metaUrl; $("cfgStatus").innerHTML = ""; cfg.showModal(); });
@@ -559,16 +560,16 @@ $("cfgSave").addEventListener("click", async () => {
   await loadModel();
   cfg.close();
 });
-
+ 
 /* ============================== analysis ============================== */
 $("analyze").addEventListener("click", analyse);
-
+ 
 async function analyse(){
   if (!state.bitmap) return;
   const btn = $("analyze");
   btn.disabled = true; btn.innerHTML = `<span class="spinner"></span>Analysing…`;
   $("intakeError").innerHTML = "";
-
+ 
   let result, simulated = false;
   if (state.ready) {
     try { result = await onnxPredict(); }
@@ -577,21 +578,21 @@ async function analyse(){
     }
   }
   if (!result) { result = await simulate(); simulated = true; }
-
+ 
   render(result, simulated);
   btn.disabled = false; btn.textContent = "Analyse image";
 }
-
+ 
 async function onnxPredict(){
   const size = state.meta.image_size || 224;
   const mean = state.meta.mean || [0.485,0.456,0.406];
   const std = state.meta.std || [0.229,0.224,0.225];
-
+ 
   const c = document.createElement("canvas"); c.width = size; c.height = size;
   const ctx = c.getContext("2d", { willReadFrequently:true });
   ctx.drawImage(state.bitmap, 0, 0, size, size);
   const px = ctx.getImageData(0, 0, size, size).data;
-
+ 
   // HWC uint8 -> CHW float32, normalized
   const chw = new Float32Array(3 * size * size);
   const plane = size * size;
@@ -600,14 +601,14 @@ async function onnxPredict(){
     chw[plane + i]   = (px[i*4+1] / 255 - mean[1]) / std[1];
     chw[2*plane + i] = (px[i*4+2] / 255 - mean[2]) / std[2];
   }
-
+ 
   const input = new ort.Tensor("float32", chw, [1, 3, size, size]);
   const outputs = await state.session.run({ pixel_values: input });
-
+ 
   const probs = Array.from(outputs.probs.data);
   const idx = probs.indexOf(Math.max(...probs));
   const classes = state.meta.classes || CLASSES;
-
+ 
   return {
     cls: classes[idx],
     conf: probs[idx],
@@ -616,7 +617,7 @@ async function onnxPredict(){
     localizationMode: state.meta.localization_mode || "gradcam"
   };
 }
-
+ 
 /* ---------- simulated mode ---------- */
 async function simulate(){
   const N = 224;
@@ -624,7 +625,7 @@ async function simulate(){
   const ctx = c.getContext("2d", { willReadFrequently:true });
   ctx.drawImage(state.bitmap, 0, 0, N, N);
   const px = ctx.getImageData(0, 0, N, N).data;
-
+ 
   const G = 56, cell = N / G;
   const dev = new Float32Array(G * G), dark = new Float32Array(G * G);
   let mr=0, mg=0, mb=0, n=0;
@@ -694,7 +695,7 @@ function mulberry(a){
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
   };
 }
-
+ 
 function ramp(t){
   const stops = [[0.00,44,62,143],[0.28,46,154,168],[0.52,99,194,107],[0.76,232,212,74],[1.00,217,67,44]];
   t = Math.max(0, Math.min(1, t));
@@ -720,7 +721,7 @@ function paintGrid(canvas, grid, G, gamma){
   ctx.clearRect(0,0,S,S); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
   ctx.drawImage(small, 0, 0, S, S);
 }
-
+ 
 /* ============================== render ============================== */
 function hideResults(){
   $("results").classList.remove("on");
@@ -730,32 +731,32 @@ function hideResults(){
 function render(res, simulated){
   const cls = CLASSES.includes(res.cls) ? res.cls : CLASSES[res.probs.indexOf(Math.max(...res.probs))];
   const [level, label] = TRIAGE[cls];
-
+ 
   $("idleState").style.display = "none";
   $("results").classList.add("on");
-
+ 
   $("simBanner").innerHTML = simulated
     ? `<div class="notice" style="margin-bottom:16px"><strong>Simulated result.</strong> No model file is loaded, so the class scores and maps below were generated in the browser from image statistics. They carry no clinical or scientific meaning. Open <em>Model source</em> in the header once model.onnx is in place.</div>`
     : "";
   $("camBanner").innerHTML = state.fromCamera
     ? `<div class="notice" style="margin-bottom:16px">This photograph came from a camera. The model was trained on dermoscopic images, which look quite different, so treat this result as a demonstration of the pipeline.</div>`
     : "";
-
+ 
   $("rail").className = "rail " + level;
   $("triage").className = "triage " + level;
   $("triage").textContent = label;
   $("dxName").textContent = FULL[cls];
   $("dxCode").textContent = "class code · " + cls;
-
+ 
   const conf = Math.max(0, Math.min(1, res.conf));
   $("confVal").textContent = (conf*100).toFixed(2) + "%";
   $("confFill").style.width = "0%";
   requestAnimationFrame(() => { $("confFill").style.width = (conf*100).toFixed(1) + "%"; });
-
+ 
   $("careList").innerHTML = CARE[cls].map(t => `<li>${escapeHTML(t)}</li>`).join("");
   $("txList").innerHTML = TREATMENT[cls].map(t => `<li>${escapeHTML(t)}</li>`).join("");
   $("generalNote").textContent = GENERAL;
-
+ 
   const order = CLASSES.map((c,i) => ({ c, p:res.probs[i] })).sort((a,b) => b.p - a.p);
   $("probList").innerHTML = order.map(o => `
     <div class="prob ${o.c === cls ? "lead" : ""}">
@@ -765,10 +766,10 @@ function render(res, simulated){
   requestAnimationFrame(() => {
     document.querySelectorAll("#probList .prob-fill").forEach((el, i) => { el.style.width = (order[i].p*100).toFixed(1) + "%"; });
   });
-
+ 
   const inputURL = bitmapToURL(state.bitmap, 224);
   $("plateOrig").src = inputURL; $("plateCamBase").src = inputURL; $("plateAttnBase").src = inputURL;
-
+ 
   if (res.localizationMode === "activation_map") {
     $("camTitle").textContent = "ResNet50 activation map";
     $("camDesc").textContent = "Plain channel-averaged activation, without class-specific gradient weighting.";
@@ -776,13 +777,13 @@ function render(res, simulated){
     $("camTitle").textContent = "ResNet50 Grad-CAM";
     $("camDesc").textContent = "Gradient-weighted activation from the final convolutional block.";
   }
-
+ 
   paintGrid($("plateCam"), res.grid.cam, res.grid.size, 1.35);
   paintGrid($("plateAttn"), res.grid.attn, res.grid.size, 1.6);
   applyOpacity();
   $("explainPanel").style.display = "block";
 }
-
+ 
 const opacity = $("opacity");
 opacity.addEventListener("input", applyOpacity);
 function applyOpacity(){
@@ -793,7 +794,7 @@ function applyOpacity(){
 function escapeHTML(s){
   return String(s).replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
 }
-
+ 
 /* ============================== boot ============================== */
 applyOpacity();
 loadModel();
